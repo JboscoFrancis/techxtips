@@ -1,0 +1,490 @@
+{% load  static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevPot</title>
+
+    <!-- bootstrap files -->
+    <link rel="stylesheet" href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}">
+
+    <!-- bootstrap icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
+    <!-- boxicons -->
+    <link rel="stylesheet" href="{% static 'vendor/boxicons/css/boxicons.min.css' %}">
+
+    <!-- owl-carousel -->
+    <link href="{% static 'vendor/owl.carousel/assets/owl.carousel.min.css' %}" rel="stylesheet" >
+    <link href="{% static 'vendor/owl.carousel/assets/owl.theme.green.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+
+    <link href="{% static 'vendor/aos/aos.css' %}" rel="stylesheet">
+    <!-- fontawesome -->
+    <script src="https://kit.fontawesome.com/0fd3fb4178.js" crossorigin="anonymous"></script>
+    <!-- google fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700;1,900&display=swap" rel="stylesheet">
+
+            <!-- sweetalert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+
+    <style>
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 92%;
+            background-image: linear-gradient(#16222A, #3A6073);
+          }
+    </style>
+</head>
+<body>
+  <!-- ======= Hero Section ======= -->
+  <section id="hero" class="d-flex align-items-center">
+      <div id="particles-js"></div>
+        <div class="container d-flex flex-column align-items-center" data-aos="zoom-in" data-aos-delay="100">
+            <h1>TechxTips</h1>
+            <h2 class="p-5">Stop a fixed mind, Utilize your Brain</h2>
+            <div class="d-grid gap-2 col-md-4 col-sm-6 mx-auto text-center">
+              <a href="#header" class="btn-cta">Get started</a>
+            </div>
+          </div>
+  </section><!-- End Hero -->
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="">
+    <div class="container d-flex justify-content-between align-items-center">
+
+      <!-- <h1 class="logo me-auto me-lg-0"><a href="index.html">Sciex</a></h1> -->
+      <!-- Uncomment below if you prefer to use an image logo -->
+      <a href="{% url 'index' %}" class="logo"><img src="{% static 'img/logo/logo.png' %}" alt="DevPot" class="img-fluid"></a>
+
+      <nav id="navbar" class="navbar order-last order-lg-0">
+        <ul>
+          <li><a href="{% url 'index' %}">Home</a></li>
+          <li><a href="{% url 'service' %}">Services</a></li>
+          <li><a href="">Our works</a></li>
+          <li><a href="{% url 'blog' %}">Blog</a></li>
+          <li><a href="{% url 'contact' %}">Contact Us</a></li>
+          
+
+          {% if request.user.is_authenticated %}
+          <!-- this only visible in small devices -->
+          <li><a class="d-md-none" href="{% url 'userlogout' %}">logout</a></li>
+          <li><a class="d-md-none" href="{% url 'account' %}">Account</a></li>
+          {% else %}
+          <li><a class="d-md-none" href="" data-bs-toggle="modal"  data-bs-target="#formoption">Sign in</a></li>
+          {% endif %}
+        </ul>
+        <i class="bi-list mobile-nav-toggle"></i>
+      </nav><!-- .navbar -->
+
+      <!-- this only visible in large devices -->
+      <div class="header-social-links ">
+        {% if request.user.is_authenticated %}
+        <a class="btn-account" href="{% url 'account' %}">Account</a>&emsp;
+        <a class="btn btn-sm btn-outline-primary btn-logout" href="{% url 'userlogout' %}"><i class='bx bx-log-out'></i> logout</a>
+        {% else %}
+        <a class="btn btn-sm btn-outline-primary btn-login" href="" data-bs-toggle="modal"  data-bs-target="#formoption"><i class='bx bx-log-in' ></i> sign in</a>
+        {% endif %}
+      </div>
+
+    </div>
+
+  </header><!-- End Header -->
+
+  <div class="container">
+    <div class="row">
+        <div class="col">
+               <!-- Button trigger modal -->
+                              <!-- Modal -->
+                              <div class="modal fade"  data-bs-backdrop="static" id="formoption" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel"></h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="{% url 'userlogin' %}" method="POST">
+                                            {% csrf_token %}
+                                            <div class="p-4" id="loginInfo">
+                                                <p class="text-center mb-4"><b>Do you have an account</b></p>
+                                                
+                                                <div class="form-group mb-3">
+                                                    <label for="username">Username</label>
+                                                    <input class="form-control" type="text" placeholder="username" name="username" required>
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <label for="username">Password</label>
+                                                    <input class="form-control" type="password" placeholder="password" name="password" required>
+                                                </div>
+                                            </div>
+                                            <div class="text-center mt-3">
+                                              <button class="btn btn-primary btn-sm mr-4">Sign In</button>
+                                              <small class="ml-4">Don't have account <a href="{% url 'register' %}">Sign Up</a></small>
+                                          </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+        </div>
+    </div>
+</div>
+
+  <section id="wrapper1">
+    <div>
+      <marquee behavior="" direction="" scrollamount="4"><p><i class="bi bi-envelope"></i> info@techxtips.com &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; <i class='bx bx-phone-call'></i> Hotline +255743914359 | +255737561608</p></marquee>
+    </div>
+    <div class="container-fluid py-3">
+      <div class="row wrapper1 justify-content-between">
+        <div class="col-md-6" data-aos="zoom-in">
+          <img class="img-fluid" src="{% static 'img/img-1.jpg' %}" alt="techxtips">
+        </div>
+        <div class="col-md-6 d-flex align-items-center">
+          <div class="row" data-aos="fade-up" data-aos-delay="250">
+            <!-- <h1>TechxTips</h1> -->
+            <div class="text-center py-3">
+              <i class='bx bxs-component' style="font-size: 85px; color: #d6d3d3;"></i>
+            </div>
+            <h3><i class="bi bi-caret-right"></i> Web developer expertisee building proffesional website</h3>
+            <h3><i class="bi bi-caret-right"></i> Make your own website today</h3>
+            <h3><i class="bi bi-caret-right"></i> Grow your business with professional website built to market</h3>
+            <div class="text-center py-3">
+              <a class="btn-cta" href="{% url 'service' %}">MORE ABOUT US</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section id="wrapper2">
+    <div class="container text-center py-5">
+      <div class="row wrapper2" data-aos="fade-up">
+        <h4>Why Should You Choose Us</h4>
+        <div class="col-md mb-3" data-aos="fade-in">
+          <h5>Client Trust</h5>
+          <i class="far fa-handshake"></i>
+          <p>We love all our customers and we are very good at working with clients in a very accurate and honest manner. The work of our clients is our work too.</p>
+        </div>
+        <div class="col-md mb-3" data-aos="fade-bottom">
+          <h5>Quality Support</h5>
+          <i class="fas fa-user-cog"></i>
+          <p>We guarantee you reliable support when you submit your work, and we work in good cooperation to ensure we work according to your needs.</p>
+        </div>
+        <div class="col-md mb-3" data-aos="fade-up">
+          <h5>Quality Services</h5>
+          <i class="fas fa-tools"></i>
+          <p>The quality of our services is a major factor in the performance of our client. we work at a quality that fits your budget.</p>
+        </div>
+      </div >
+      <div class="py-4">
+        <a class="btn-cta" href="{% url 'service' %}">Our services</a>
+      </div>
+    </div>
+  </section>
+  <section class="wrapper3" data-aos="fade-in">
+    <div class="container-fluid">
+      <p>Smart Fast And Quality Service😎👌</p>
+    </div>
+  </section>
+  <section class="wrapper4 mb-1">
+    <div class="container-fluid" data-aos="fade-in">
+      <div class="row text-center justify-content-center">
+        <div class="col-md-11">
+          <div class="row">
+            <h4>New Post & Updates</h4>
+            {% for post in post %}
+            <div class="col-md-3 mt-3" data-aos="fade-up" data-aos-delay="250">
+              <h5>{{post.title}}</h5>
+              <a href="{% url 'post' post.slug %}">{{post.descriptions|truncatewords:"20"}}</a>
+            </div>
+            {% endfor %}
+            <a class="btn-cta mt-3" href="{% url 'blog' %}">ALL OUR BLOG</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrapper5">
+    <div class="container-fluid" data-aos="fade-up">
+      <div class="row text-center justify-content-center mb-3">
+        <div class="col-md-11 gallery-img">
+          <h4>Tech Tips</h4>
+          <div class="row owl-carousel gallery-carousel  owl-theme mb-2">
+            {% for tip in tips %}
+            <div data-gall="gallery-carousel">
+              <img class="img-fluid mb-3 glightbox" src="{{tip.imageurl}}" alt="">
+              <a href="{% url 'tips_detail' tip.title tip.id %}"><h5>{{tip.title}}</h5></a>
+            </div>
+            {% endfor %}
+          </div>
+          <a class="btn-cta mt-3" href="{% url 'blog' %}">ALL OUR TIPS</a>
+        </div>
+      </div>
+    </div>
+  </section>
+<footer>
+    <!-- Grid container -->
+    <div class="container p-4">
+        <div class="text-center social-links">
+            <ul>
+                <li><a href=""><i class='bx bxl-youtube' ></i></a></li>
+                <li><a href=""><i class='bx bxl-facebook-circle' ></i></a></li>
+                <li><a href=""><i class='bx bxl-twitter' ></i></a></li>
+                <li><a href=""><i class='bx bxl-github' ></i></a></li>
+                <li><a href=""><i class='bx bxl-linkedin-square' ></i></a></li>
+            </ul>
+        </div>
+      <!--Grid row-->
+      <div class="row">
+        <!--Grid column-->
+        <div class="col-lg-6 col-md-12 mb-4 mb-md-0 footer-content text-center">
+          <h5>About Us</h5>
+          <p>Web developer expertisee building proffesional website <br>
+            We do website development (Portfolio, College, Schools, Business, entertainment, etc.)</p>
+        </div>
+        <!--Grid column-->
+  
+        <!--Grid column-->
+        <div class="text-center col-lg-3 col-md-6 mb-4 mb-md-0 footer-links">
+          <h5 class="">Important links</h5>
+  
+          <ul class="list-unstyled mb-0">
+            <li>
+              <a href="#!" class="text-white">Dev community</a>
+            </li>
+            <li>
+              <a href="#!" class="text-white">django doc</a>
+            </li>
+            <li>
+              <a href="#!" class="text-white">javascript</a>
+            </li>
+            <li>
+              <a href="#!" class="text-white">Link 4</a>
+            </li>
+          </ul>
+        </div>
+        <!--Grid column-->
+  
+        <!--Grid column-->
+        <div class="col-lg-3 col-md-6 mb-4 mb-md-0 footer-subscribe text-center">
+          <h5 class="mb-0">Subscribe</h5>
+
+          <div>
+            <form action="" method="POST" class="subscribe-form p-1">
+              {% csrf_token %}
+              <p><i class='bx bx-send'></i> Subscribe for our News & Updates</p>
+              <div class="form-group">
+                <input class="form-control mb-2 text-capitalize name" type="text" name="" id="sub-name" placeholder="Your full name" required>
+              </div>
+              <div class="form-group">
+                  <input class="form-control mb-2" type="email" name="email" id="sub-email" placeholder="Your email" required>
+              </div>
+              <div class="text-center">
+                <button class="btn btn-sm mb-1 btn-outline-secondary ">subscribe</button>
+              </div>
+          </form>
+          </div>
+        </div>
+        <!--Grid column-->
+      </div>
+      <!--Grid row-->
+    </div>
+    <!-- Grid container -->
+  
+    <!-- Copyright -->
+    <div class="text-center text-light py-2" style="background-color: #352b3d;">
+        <p>&copy; 2021 Copyright: devpot.com</p>
+    </div>
+    <!-- Copyright -->
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  <script src="{% static 'vendor/aos/aos.js' %}"></script>
+  <script>
+      // ParticlesJS Config.
+particlesJS("particles-js", {
+    "particles": {
+      "number": {
+        "value": 100,
+        "density": {
+          "enable": true,
+          "value_area": 800
+        }
+      },
+      "color": {
+        "value": "random"
+      },
+      "shape": {
+        "type": ["circle", "triangle","star", "polygon"],
+        "stroke": {
+          "width": 1,
+          "color": "random"
+        },
+        "polygon": {
+          "nb_sides": 5
+        },
+      },
+      "opacity": {
+        "value": 0.5,
+        "random": false,
+        "anim": {
+          "enable": false,
+          "speed": 0.1,
+          "opacity_min": 0.1,
+          "sync": false
+        }
+      },
+      "size": {
+        "value": 4,
+        "random": true,
+        "anim": {
+          "enable": false,
+          "speed": 10,
+          "size_min": 0.1,
+          "sync": false
+        }
+      },
+      "line_linked": {
+        "enable": true,
+        "distance": 150,
+        "color": "#ffffff",
+        "opacity": 0.4,
+        "width": 1
+      },
+      "move": {
+        "enable": true,
+        "speed": 4,
+        "direction": "none",
+        "random": false,
+        "straight": false,
+        "out_mode": "out",
+        "bounce": true,
+        "attract": {
+          "enable": false,
+          "rotateX": 600,
+          "rotateY": 1200
+        }
+      }
+    },
+    "interactivity": {
+      "detect_on": "canvas",
+      "events": {
+        "onhover": {
+          "enable": true,
+          "mode": "grab"
+        },
+        "onclick": {
+          "enable": true,
+          "mode": "push"
+        },
+        "resize": true
+      },
+      "modes": {
+        "grab": {
+          "distance": 140,
+          "line_linked": {
+            "opacity": 1
+          }
+        },
+        "bubble": {
+          "distance": 400,
+          "size": 40,
+          "duration": 2,
+          "opacity": 8,
+          "speed": 3
+        },
+        "repulse": {
+          "distance": 200,
+          "duration": 0.4
+        },
+        "push": {
+          "particles_nb": 4
+        },
+        "remove": {
+          "particles_nb": 2
+        }
+      }
+    },
+    "retina_detect": true
+  });
+  </script>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+
+  <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.js' %}"></script>
+  <script src="{% static 'js/main.js' %}"></script>
+  <script src="{% static 'vendor/owl.carousel/owl.carousel.min.js' %}"></script>
+  <script src="{% static 'vendor/glightbox/js/glightbox.min.js' %}"></script>
+  <script>
+    $(window).scroll(function() {
+        if ($(this).scrollTop() > 600) {
+            $('#header').addClass('header-scrolled');
+    } else {
+        $('#header').removeClass('header-scrolled');
+    }
+    });
+  </script>
+  <script>
+    $('.owl-carousel').owlCarousel({
+      loop:true,
+      margin:4,
+      nav:true,
+      autoplay:true,
+      center: true,
+      responsive:{
+          0:{
+              items:1
+          },
+          390:{
+              items:3
+          },
+          650:{
+              items:4
+          },
+          820:{
+              items:5
+        },
+      }
+    })
+  </script>
+
+  <script>
+    const lightbox = GLightbox({
+      touchNavigation: true,
+      loop: true,
+      autoplayVideos: true,
+      closeOnOutsideClick: true,
+    });
+  </script>
+  <script>
+
+    jQuery(document).ready(function($){
+      var path = window.location.pathname.split("/").pop();
+    
+      if(path == ''){
+        path = '/';
+      }else{
+        path = '/'+path
+      }
+    
+      console.log(path)
+      var target = $('a[href="'+path+'"]');
+      console.log(target)
+      target.addClass('active');
+    });
+    </script>
+</body>
+</html>

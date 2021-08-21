@@ -1,0 +1,257 @@
+{% extends 'blog/base.html' %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+{% load static %}
+
+{% block content %}
+  <section>
+      <div class="container py-5">
+          <div class="row justify-content-center">
+              <div class="col-md-8 post-detail card">
+                <div class="thumbnail-img text-center">
+                    <a href="{% url 'post' post.slug %}"><img class="img-fluid rounded py-4" src="{{post.imageurl}}" alt=""></a>
+                </div>
+                <span><span style="font-style:italic; color:#669bbc">Posted on: {{post.date_created}}</span> &emsp; <span>Writen by: {{post.user.first_name}}</span></span>
+                  <h3 class="text-center">{{post.title|capfirst}}</h3>
+                <p>{{post.body|safe}}</p>
+                <div class="pt-0 text-center">
+                    {% if request.user not in post.likes.all %}
+                    <span class="likeBtn" data-post="{{post.id}}"><i class='bx bx-like bx-tada-hover' id="likeBtn{{post.id}}"></i></span>
+                    {% else %}
+                    <span class="likeBtn text-primary" data-post="{{post.id}}"><i class='bx bxs-like bx-tada-hover' id="likeBtn{{post.id}}"></i></span>
+                    {% endif %}
+                    <span><sup id="{{post.id}}">{{post.likes_count}} likes</sup></span>&emsp;
+                    {% if request.user.is_superuser %}
+                    <span><a class="btn btn-sm btn-primary" href="{% url 'update' post.slug %}"> edit post</a></span>
+                    {% endif %}
+                  </div>
+                  <hr>
+                  <span><b>{{totalcomment}}</b> Comments</span>&emsp;
+                  {% for comment in comments %}
+                  <div class="comment-container">
+                    <div class="d-flex align-items-center">
+                      <img class="img rounded" src="{% static 'img/logo/avatar.png' %}" width="40" alt="kkk" id="">&nbsp;&nbsp;
+                      <h6>{{comment.user.username}}</h6>&emsp;| 
+                      <small style="color: #748; font-size: 12px;">&nbsp;{{comment.date_comment|naturaltime}}</small>
+                    </div>
+                    <p style="margin-left: 4%;">{{comment.text}}</p>
+                    <i class="bi bi-reply mt-3 replybtn" data-commentid="{{comment.id}}" style="cursor: pointer; margin-left: 30%;"> Reply</i>
+
+
+                    
+                    <div class="row justify-content-end">
+                      <div class="">
+                        <form action="" method="" class="d-none reply-form p-3" id="reply{{comment.id}}">
+                          {% csrf_token %}
+                          <input class="d-none commentid" type="text" name="" id="" value="{{comment.id}}">
+                          <textarea class="form-control" name="" id="{{comment.id}}" cols="30" rows="3" placeholder="write reply" required></textarea>
+                          <div class="text-end mt-1">
+                            <button class="btn btn-primary btn-sm">Reply <i class="bi bi-arrow-right"></i></button>
+                          </div>
+                        </form>
+                      </div>
+                      {% for reply in comment.reply_set.all %}
+                      <div class="col-md-11 pt-2">
+                        <div class="d-flex align-items-center">
+                          <img class="img rounded" src="{% static 'img/logo/avatar.png' %}" width="30" alt="kkk" id="">&nbsp;&nbsp;
+                          <h6>{{reply.user.username}}</h6>&emsp;| 
+                          <small style="color: #748; font-size: 12px;">&nbsp;{{reply.date_reply|naturaltime}}</small>
+                        </div>
+                        <p style="font-style: italic; font-size: 16px; margin-left: 4%;">{{reply.text}}</p>
+                      </div>
+                      {% endfor %}
+
+                    </div>
+                    
+                  </div>
+                  <hr>
+                  {% endfor %}
+
+                  <!-- this is visible only when new comment added -->
+                  <div class="d-none" id="commentd-none">
+                    <div class="comment-container" id="comment-container">
+                      <div class="d-flex align-items-center" id="d-flex">
+                        <img class="img rounded" src="{% static 'img/logo/avatar.png' %}" width="40" alt="kkk" id="">&nbsp;&nbsp;
+                        <h6 id="comment-name"></h6>
+                      </div>
+                      <p id="comment-text"></p>
+                    </div>
+                    <hr>
+                  </div>
+                  <!-- ------------- -->
+                  <div class="comment-form mt-3">
+                    <form action="" method="POST" id="comment-form">
+                      {% csrf_token %}
+                      {{form}}
+                      {% if request.user.is_authenticated %}
+                      <button class="btn btn-cta" >comment</button>
+                      {% else %}
+                      <button class="btn btn-cta" disabled>comment</button>
+                      {% endif %}
+                    </form>
+                  </div>
+              </div>
+              <div class="col-md-4">
+                <div class="sticky-top sticky">
+                  <h5>Other Post of the same Category</h5>
+                  <div class="container">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <p>Lorem ipsum dolor sit amet.</p>
+                        <small>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis veniam sapiente sequi pariatur illum.</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+      </div>
+  </section>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+  
+  <!-- like button using ajax -->
+  <script>
+    // AJAX CALL
+    $('.likeBtn').click(function(){
+      console.log('cliked')
+      const postId = this.dataset.post
+      count = document.getElementById(postId).innerHTML;
+      if(user == 'AnonymousUser'){
+        Swal.fire({
+          position: 'top-end',
+          html: '<div class="mt-2 mb-3"><a href="http://127.0.0.1:8000/userlogin" class="alert alert-warning mt-2" >Oop!! Login to like</a></div>',
+          icon: 'warning',
+          showConfirmButton: true,
+          timer: 3000
+        })
+
+      }else{
+        $.ajax({
+          type: "POST",
+          url: "{% url 'likepost' %}",
+          data: {
+            'postId': postId,
+           'csrfmiddlewaretoken': '{{ csrf_token }}',
+          },
+          dataType: "json",
+          success: function(json) {
+            document.getElementById(postId).innerHTML = json['result']
+            newvalue = json['result']
+            if (newvalue > count){
+              var btn = document.getElementById('likeBtn'+postId)
+              btn.classList.add('bxs-like')
+            }
+            else {
+             var btn = document.getElementById('likeBtn'+postId)
+             btn.classList.remove('bxs-like')
+             btn.classList.add('bx-like')
+           }
+            console.log('success', json)
+           },
+         error: function(response){
+           console.log('error', response)
+         }
+
+     });
+      }
+      })
+    </script>
+
+    <!-- disable comment form if user is not login -->
+    <script>
+      $('#id_text').focus(function(e){
+        if(user == 'AnonymousUser'){
+          $('#id_text').blur()
+          Swal.fire({
+            position: 'top-end',
+            html: '<div class="mt-2 mb-3"><a href="http://127.0.0.1:8000/userlogin" class="alert alert-warning mt-2" >Oop!! Login to Comment</a></div>',
+            icon: 'warning',
+            showConfirmButton: true,
+            timer: 3000,
+          })
+        }
+      })
+    </script>
+
+    <!-- comment form using ajax -->
+    <script>
+      var commentname = document.getElementById('comment-name')
+      var commenttext = document.getElementById('comment-text')
+      $('#comment-form').submit(function(e){
+        e.preventDefault()
+        console.log('form submiting.....')
+
+        $.ajax({
+          type: "POST",
+          url: "{% url 'post' post.slug %}",
+          data: $('#comment-form').serialize(),
+
+          success: function(data){
+            document.getElementById('commentd-none').classList.remove('d-none')
+            commentcontainer = document.getElementById('comment-container')
+            dflex = document.getElementById('d-flex')
+            commentname.innerText = data.name
+            commenttext.innerText = data.comment_msg
+            dflex.appendChild(commentname)
+            commentcontainer.appendChild(commenttext)
+
+            document.getElementById('comment-form').reset();
+            setTimeout(function() {
+              location.reload();
+            }, 1000);
+            
+          },
+          error: function(response){
+            console.log(response.error)
+          }
+        })
+      })
+    </script>
+
+    <!-- reply comment script -->
+    <script>
+      $('.reply-form').submit(function(e){
+        e.preventDefault()
+        console.log('data submited')
+       var commentId = $(this).children('.commentid').val()
+       var replytext = document.getElementById(commentId).value
+
+       $.ajax({
+         'type': 'POST',
+         'url': "{% url 'reply' %}",
+         'data': {
+           'commentId': commentId,
+           'replytext': replytext,
+         },
+         success(data){
+           console.log('success sent')
+           location.reload()
+         },
+         error(data){
+           console.log('error occured')
+         }
+       })
+      })
+    </script>
+
+    <!-- toggle reply form -->
+    <script>
+      $('.replybtn').click(function(e){
+        if(user == "AnonymousUser"){
+          Swal.fire({
+            position: 'top-end',
+            html: '<div class="mt-2 mb-3"><a href="http://127.0.0.1:8000/userlogin" class="alert alert-warning mt-2" >Oop!! Login to Reply comment</a></div>',
+            icon: 'warning',
+            showConfirmButton: true,
+            timer: 3000,
+          })
+        }else{
+          var id = this.dataset.commentid;
+          id = 'reply'+id
+          console.log(id)
+          document.getElementById(id).classList.toggle('d-none')
+        }
+      })
+    </script>
+{% endblock %}

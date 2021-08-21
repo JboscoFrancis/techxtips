@@ -1,0 +1,238 @@
+{% load  static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevPot</title>
+
+    <!-- bootstrap files -->
+    <link rel="stylesheet" href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}">
+
+    <!-- bootstrap icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
+    <!-- boxicons -->
+    <link rel="stylesheet" href="{% static 'vendor/boxicons/css/boxicons.min.css' %}">
+
+    <link href="{% static 'vendor/aos/aos.css' %}" rel="stylesheet">
+
+    <!-- google fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+    
+   
+        <!-- sweetalert2 -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+        <script>
+          var user = '{{request.user}}'
+        </script>
+
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+</head>
+<body>
+      <!-- ======= Header ======= -->
+  <header id="header" class="">
+    <div class="container d-flex justify-content-between align-items-center">
+
+      <!-- <h1 class="logo me-auto me-lg-0"><a href="index.html">Sciex</a></h1> -->
+      <!-- Uncomment below if you prefer to use an image logo -->
+      <a href="{% url 'index' %}" class="logo"><img src="{% static 'img/logo/logo.png' %}" alt="DevPot" class="img-fluid"></a>
+
+      <nav id="navbar" class="navbar order-last order-lg-0">
+        <ul>
+          <li><a href="{% url 'index' %}">Home</a></li>
+          <li><a href="{% url 'service' %}">Services</a></li>
+          <li><a href="">Our works</a></li>
+          <li><a href="{% url 'blog' %}">Blog</a></li>
+          <li><a href="{% url 'contact' %}">Contact Us</a></li>
+          
+          
+          {% if request.user.is_authenticated %}
+          <!-- this only visible in small devices -->
+          <li><a class="d-md-none" href="{% url 'userlogout' %}">logout</a></li>
+          <li><a class="d-md-none" href="{% url 'account' %}">Account</a></li>
+          {% else %}
+          <li><a class="d-md-none" href="" data-bs-toggle="modal"  data-bs-target="#formoption">Sign in</a></li>
+          {% endif %}
+        </ul>
+        <i class="bi-list mobile-nav-toggle"></i>
+      </nav><!-- .navbar -->
+
+      <div class="header-social-links ">
+        {% if request.user.is_authenticated %}
+        <a class="btn-account" href="{% url 'account' %}">Account</a>&emsp;
+        <a class="btn btn-sm btn-outline-primary btn-logout" href="{% url 'userlogout' %}"><i class='bx bx-log-out'></i> logout</a>
+        {% else %}
+        <a class="btn btn-sm btn-outline-primary btn-login" href="" data-bs-toggle="modal"  data-bs-target="#formoption"><i class='bx bx-log-in' ></i> sign in</a>
+        {% endif %}
+      </div>
+
+    </div>
+
+  </header><!-- End Header -->
+
+  <div class="container">
+    <div class="row">
+        <div class="col">
+               <!-- Button trigger modal -->
+                              <!-- Modal -->
+                              <div class="modal fade"  data-bs-backdrop="static" id="formoption" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel"></h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="{% url 'userlogin' %}" method="POST">
+                                            {% csrf_token %}
+                                            <div class="p-4" id="loginInfo">
+                                                <p class="text-center mb-4"><b>Do you have an account</b></p>
+                                                
+                                                <div class="form-group mb-3">
+                                                    <label for="username">Username</label>
+                                                    <input class="form-control" type="text" placeholder="username" name="username" required>
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <label for="username">Password</label>
+                                                    <input class="form-control" type="password" placeholder="password" name="password" required>
+                                                </div>
+                                            </div>
+                                            <div class="text-center mt-3">
+                                              <button class="btn btn-primary btn-sm mr-4">Sign In</button>
+                                              <small class="ml-4">Don't have account <a href="{% url 'register' %}">Sign Up</a></small>
+                                          </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+        </div>
+    </div>
+</div>
+
+    <div>
+      <div>
+        {% for message in messages %}
+        <p class="text-center alert alert-{{message.tags}}">{{message}}</p>
+        {% endfor %}
+      </div>
+      <div>
+        <marquee behavior="" direction="" scrollamount="4"><p><i class="bi bi-envelope"></i> info@techxtips.com &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; <i class='bx bx-phone-call'></i> Hotline +255743914359 | +255737561608</p></marquee>
+      </div>
+        {% block content %}
+
+        {% endblock %}
+    </div>
+    <footer>
+      <!-- Grid container -->
+      <div class="container p-4">
+          <div class="text-center social-links">
+              <ul>
+                  <li><a href=""><i class='bx bxl-youtube' ></i></a></li>
+                  <li><a href=""><i class='bx bxl-facebook-circle' ></i></a></li>
+                  <li><a href=""><i class='bx bxl-twitter' ></i></a></li>
+                  <li><a href=""><i class='bx bxl-github' ></i></a></li>
+                  <li><a href=""><i class='bx bxl-linkedin-square' ></i></a></li>
+              </ul>
+          </div>
+        <!--Grid row-->
+        <div class="row">
+          <!--Grid column-->
+          <div class="col-lg-5 col-md-12 mb-4 mb-md-0 footer-content text-center">
+            <h5>About Us</h5>
+            <p>Web developer expertisee building proffesional website <br>
+              We do website development (Portfolio, College, Schools, Business, entertainment, etc.)</p>
+          </div>
+          <!--Grid column-->
+    
+          <!--Grid column-->
+          <div class="text-center col-lg-3 col-md-6 mb-4 mb-md-0 footer-links">
+            <h5 class="">Important links</h5>
+    
+            <ul class="list-unstyled mb-0">
+              <li>
+                <a href="#!" class="text-white">Dev community</a>
+              </li>
+              <li>
+                <a href="#!" class="text-white">django doc</a>
+              </li>
+              <li>
+                <a href="#!" class="text-white">javascript</a>
+              </li>
+              <li>
+                <a href="#!" class="text-white">Link 4</a>
+              </li>
+            </ul>
+          </div>
+          <!--Grid column-->
+    
+          <!--Grid column-->
+          <div class="col-lg-4 col-md-6 mb-4 mb-md-0 footer-subscribe text-center">
+            <h5 class="mb-0">Subscribe</h5>
+  
+            <div>
+                <form action="" method="POST" class="subscribe-form p-1">
+                  {% csrf_token %}
+                    <p><i class='bx bx-send'></i> Subscribe for our News & Updates</p>
+                    <div class="form-group">
+                      <input class="form-control mb-2 text-capitalize name" type="text" name="" id="sub-name" placeholder="Your full name" required>
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control mb-2" type="email" name="" id="sub-email" placeholder="Your email" required>
+                    </div>
+                    <div class="text-center">
+                      <button class="btn btn-sm mb-1 btn-outline-secondary ">subscribe</button>
+                    </div>
+                </form>
+            </div>
+          </div>
+          <!--Grid column-->
+        </div>
+        <!--Grid row-->
+      </div>
+      <!-- Grid container -->
+    
+      <!-- Copyright -->
+      <div class="text-center text-light py-2" style="background-color: #352b3d;">
+          <p>&copy; 2021 Copyright: devpot.com</p>
+      </div>
+      <!-- Copyright -->
+    </footer>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.js' %}"></script>
+
+    <script src="{% static 'vendor/aos/aos.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+
+<script>
+
+jQuery(document).ready(function($){
+  var path = window.location.pathname.split("/").pop();
+
+  if(path == ''){
+    path = '/';
+  }else{
+    path = '/'+path
+  }
+
+  console.log(path)
+  var target = $('a[href="'+path+'"]');
+  console.log(target)
+  target.addClass('active');
+});
+</script>
+</body>
+</html>

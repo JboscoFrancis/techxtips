@@ -1,0 +1,83 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block content %}
+<section>
+    <div class="container-fluid py-3">
+        <div class="row justify-content-center p-1">
+            <div class="col-md-10">
+                <div class="row text-center">
+                    <div class="col-md-6 mb-3">
+                        <img class="img-fluid" src="{% static 'img/support.png' %}" alt="">
+                    </div>
+                    <div class="col-md-6 d-flex align-items-center">
+                        <h5>Join us by subscribing to our website so you can get all the news and updates in our blog. you can also visit our social media twitter, facebook, instagram and youtube without forgetting to subscribe to our favorite Youtube channel. Thanks 🙏🙏</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+</section>
+<section>
+    <div class="container mt-4 contact" data-aos="fade-up">
+        <h3 class="text-center">CATCHUP WITH US</h3>
+        <div class="row mt-4">
+            <div class="col-md p-3">
+                <h4 class="text-center" data-aos="fade-up">Social Media</h4>
+                <div class="social-media">
+
+                    <div class="youtube" data-aos="fade-up">
+                        <i class='bx bxl-youtube'></i>
+                        <a href="" target="_blank"><h5>Youtube:</h5></a>
+                        <p>Subscribe to get techxtips videos</p>
+                    </div>
+
+                    <div class="twitter" data-aos="fade-up">
+                        <i class='bx bxl-twitter'></i>
+                        <a href="" target="_blank"><h5>Twitter:</h5></a>
+                        <p>We twits about IT everyday follow us now</p>
+                    </div>
+      
+                    <div class="Facebook" data-aos="fade-up">
+                        <i class='bx bxl-facebook-circle'></i>
+                        <a href="" target="_blank"><h5>Facebook:</h5></a>
+                        <p>Get more news and techxtips everyday</p>
+                    </div>
+      
+                    <div class="instagram" data-aos="fade-up">
+                        <i class='bx bxl-instagram-alt' ></i>
+                        <a href="" target="_blank"><h5>Instagram:</h5></a>
+                        <p>follow us on Instagram techxtips</p>
+                    </div>
+      
+                  </div>
+            </div>
+            <div class="col-md p-3" data-aos="fade-up">
+                <h4 class="text-center">Message Us Direct</h4>
+                <form action="" method="post" role="form" class="contact-form pt-1" data-aos="fade-up">
+                    <div class="row">
+                      <div class="col-md-6 form-group">
+                        <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required>
+                      </div>
+                      <div class="col-md-6 form-group mt-3 mt-md-0">
+                        <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" required>
+                      </div>
+                    </div>
+                    <div class="form-group mt-3">
+                      <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" required>
+                    </div>
+                    <div class="form-group mt-3">
+                      <textarea class="form-control" name="message" rows="5" placeholder="Message" required></textarea>
+                    </div>
+                    <div class="text-center d-grid gap-2 col-6 mx-auto pt-2"><button class="btn btn-sm btn-outline-primary" type="submit">submit</button></div>
+                  </form>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="wrapper3">
+  <div class="container-fluid" data-aos="fade-up">
+    <p>Smart Fast And Quality Service😎👌</p>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,93 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block content %}
+<section>
+    <div class="container-fluid py-3">
+        <div class="row wrapper1 justify-content-center p-1">
+          <div class="col-md-8 d-flex align-items-center" id="service-top">
+            <div class="row text-center p-3" data-aos="fade-up">
+              <!-- <h1>TechxTips</h1> -->
+              <div class="text-center py-3">
+                <i class='bx bxs-cuboid' style="font-size: 90px; color: #370617;"></i>
+              </div>
+              <h4>Techxtips is a group of professionals IT guys who develop applications. We are focused on making sure we provide our clients with a satisfactory standard. we do web development backend and frontend College, Schools, Business, Government, Small Business, Pockets etc.</h4>
+              <button class="btn-cta mt-3">Clients & Solutions Focused</button>
+            </div>
+          </div>
+        </div>
+      </div>
+</section>
+<section class="wrapper3">
+  <div class="container-fluid" data-aos="fade-up">
+    <p>Smart Fast And Quality Service😎👌</p>
+  </div>
+</section>
+<section>
+  <div class="container py-3">
+    <div class="row text-center">
+      <div class="col-md-4 p-2">
+        <div class="service-card" data-aos="fade-up">
+          <h3>Web Design</h3>
+          <i class='bx bx-desktop icon' ></i>
+          <p>we do web design, layout and appearance to ensure your website has a vibrant look that attracts your customers locally and abroad</p>
+        </div>
+      </div>
+      <div class="col-md-4 p-2">
+        <div class="service-card" data-aos="fade-up">
+          <h3>Web Development</h3>
+          <i class='bx bx-code-block icon'></i>
+          <p>We do website & web system development of various institutions College, Schools, Business, Personal, Blogging etc.</p>
+        </div>
+      </div>
+      <div class="col-md-4 p-2">
+        <div class="service-card" data-aos="fade-up">
+          <h3>Web Maintanance</h3>
+          <i class='bx bx-badge-check icon' ></i>
+          <p>we do website maintenance and update the package in your website to keep it updated. We can imanage and keep updates every day as you wish</p>
+        </div>
+      </div>
+      <div class="col-md-4 p-2">
+        <div class="service-card" data-aos="fade-up">
+          <h3>IT Support</h3>
+          <i class='bx bx-support icon' ></i>
+          <p>we do IT support through online if you are away from us if you are close we will follow you where you are so that we can work for you I am not about IT</p>
+        </div>
+      </div>
+      <div class="col-md-4 p-2">
+        <div class="service-card" data-aos="fade-up">
+          <h3>Graphics Design</h3>
+          <i class='bx bx-paint icon' ></i>
+          <p>we do graphics design like poster, flayer, business, invitation, ceremony card.</p>
+        </div>
+      </div>
+      <div class="col-md-4 p-2">
+        <div class="service-card" data-aos="fade-up">
+          <h3>Techtips Bloging</h3>
+          <i class='bx bxl-blogger icon' ></i>
+          <p>we are preparing various blog blogs related to IT in general also developmetnt. you will learn various things in our blog posts.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section>
+  <div class="container">
+    <div class="row">
+      
+    </div>
+  </div>
+</section>
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+<script>
+  
+$('.service-card').mouseenter(
+  function(){
+  $(this).children("i").addClass("bx-tada");
+  $('.service-card').mouseleave(
+  function(){
+    $(this).children("i").removeClass("bx-tada");
+  })
+})
+</script>
+{% endblock %}

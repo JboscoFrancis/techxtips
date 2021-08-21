@@ -1,0 +1,172 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block content %}
+<section id="blog-cta" class="blog-cta">
+    <div class="container" data-aos="zoom-in">
+      <div class="text-center" data-aos="fade-up">
+        <h1>BLOG POST</h1>
+        <p>Special cases aren't special enough to break the rules! 😎</p>
+      </div>
+    </div>
+  </section>
+  <section class="p-4">
+    <div class="container">
+        <div class="row justify-content-end">
+          <form class="d-flex" method="POST">
+            {% csrf_token %}
+            <input class="form-control me-2" type="search" placeholder="Search" name="search" aria-label="Search">
+            <button class="btn btn-outline-primary" type="submit">Search</button>
+          </form>
+        </div>
+      </div>
+  </section>
+  <section>
+      <div class="container">
+          <div class="row justify-content-around">
+            {% for message in messages %}
+            <div>
+              <script>
+                Swal.fire({
+                  title: 'Error!',
+                  text: '{{message}}',
+                  icon: 'error',
+                  confirmButtonText: 'cancel'
+                })
+              </script>
+            </div>
+            {% endfor %}
+
+
+              <div class="col-md-8 blog-post card">
+                {% for post in post %}
+                <div class="row row-blog mb-3" data-aos="fade-up">
+                  <div class="col-md-4">
+                      <a href="{% url 'post' post.slug %}"><img class="img-fluid rounded" src="{{post.imageurl}}" alt=""></a>
+                  </div>
+                  <div class="col mt-2">
+                    <h5><a href="{% url 'post' post.slug %}">{{post.title|capfirst}}</a></h5>
+                    
+                    <p>{{post.descriptions|safe|truncatewords:"40"}}</p>
+                    <div class="pt-0">
+                      {% if request.user not in post.likes.all %}
+                      <span class="likeBtn" data-post="{{post.id}}"><i class='bx bx-like bx-tada-hover' id="likeBtn{{post.id}}"></i></span>
+                      {% else %}
+                      <span class="likeBtn" data-post="{{post.id}}"><i class='bx bxs-like bx-tada-hover' id="likeBtn{{post.id}}"></i></span>
+                      {% endif %}
+                      <span><sup id="{{post.id}}">{{post.likes_count}}</sup></span>&emsp;
+                      <small style="float: right; font-style:italic; color:#669bbc">{{post.date_created}}</small>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+
+                           <!-- paginator starts-- -->
+{% if post.has_other_pages %}
+<div class="row pagination text-center py-3 center">
+    <span class="step-links text-center">
+        {% if post.has_previous %}
+            <a class="btn btn-outline-primary btn-sm" href="?page=1">&laquo; first</a>
+            <a class="btn btn-outline-primary btn-sm" href="?page={{ post.previous_page_number }}">previous</a>
+        {% endif %}
+
+        {% for num in post.paginator.page_range %}
+            {% if post.number == num %}
+                <a class="btn btn-primary btn-sm" href="?page={{num}}">{{num}}</a>
+            {% elif num > post.number|add:'-3' and num < post.number|add:'3'   %}
+                <a class="btn btn-outline-primary btn-sm" href="?page={{ num }}">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if post.has_next %}
+            <a class="btn btn-outline-primary btn-sm"  href="?page={{ post.next_page_number }}">next</a>
+            <a class="btn btn-outline-primary btn-sm"  href="?page={{ post.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+{% endif %}
+              </div>
+
+              <div class="col-md-4 news-wrapper">
+                <div class="sticky-top sticky" data-aos="fade-up">
+                    <form class="subscribe-form p-3" action="">
+                      {% csrf_token %}
+                      <p class="text-center">Subscribe for our News letter</p>
+                      <div class="form-group">
+                        <input class="form-control mb-2 text-capitalize" type="text" name="name" id="sub-name1" placeholder="Your full name" required>
+                      </div>
+                      <div class="form-group">
+                          <input class="form-control mb-2" type="email" name="email" id="sub-email1" placeholder="Your email" required>
+                      </div>
+                      <div class="text-center">
+                        <button class="btn btn-sm btn-outline-primary ">subscribe</button>
+                      </div>
+                  </form>
+                  <div class="row justify-content-center mt-4 mb-3" data-aos="fade-up">
+                    <div class="col-md-8">
+                      <div class="profile_pic">
+                        <img class="img-fluid" src="{% static 'img/logo/avatar.png' %}" alt="">
+                      </div>
+                    </div>
+                  </div>
+                    <h5 class="text-center mb-2" data-aos="fade-up">NEWS</h5>
+                    {% for new in news %}
+                    <div class="col mb-3" data-aos="fade-up">
+                      <h5>{{new.title}}</h5>
+                      <a href="{{new.link}}" target="_blank">{{new.descriptions|truncatewords:"10"}}</a>
+                    </div>
+                    {% endfor %}
+                </div>
+              </div>
+          </div>
+      </div>
+  </section>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+  <script>
+    // AJAX CALL
+    $('.likeBtn').click(function(){
+      console.log('cliked')
+      const postId = this.dataset.post
+      count = document.getElementById(postId).innerHTML;
+      if(user == 'AnonymousUser'){
+          Swal.fire({
+            position: 'top-end',
+            html: '<div class="mt-2 mb-3"><a href="http://127.0.0.1:8000/userlogin" class="alert alert-warning mt-2" >Oop!! Login to like</a></div>',
+            icon: 'warning',
+            showConfirmButton: true,
+            timer: 4500
+          })
+
+      }else{
+        $.ajax({
+          type: "POST",
+          url: "{% url 'likepost' %}",
+          data: {
+            'postId': postId,
+           'csrfmiddlewaretoken': '{{ csrf_token }}',
+          },
+          dataType: "json",
+          success: function(json) {
+            document.getElementById(postId).innerHTML = json['result']
+            newvalue = json['result']
+            if (newvalue > count){
+              var btn = document.getElementById('likeBtn'+postId)
+              btn.classList.add('bxs-like')
+            }
+            else {
+             var btn = document.getElementById('likeBtn'+postId)
+             btn.classList.remove('bxs-like')
+             btn.classList.add('bx-like')
+           }
+            console.log('success', json)
+           },
+         error: function(response){
+           console.log('error', response)
+         }
+
+     });
+      }
+      })
+    </script>
+{% endblock %}
